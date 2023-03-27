@@ -21,10 +21,10 @@ void initializeADC(){
 	ADMUX &= ~((1 << MUX0) | (1 << MUX1) | (1 << MUX2) | (1 << MUX3) | (1 << MUX4) | (1 << MUX5));
 
    //set Auto-trigger with free-running fode
-	ADCSRB &= ~((1 << ADTS0) | (1 << ADST1) | (1 << ADST2));
+	ADCSRB &= ~((1 << ADTS0) | (1 << ADTS1) | (1 << ADTS2));
 
    //enable ADC and auto-triggering
-	ADCSRBA |= ((1 << ADEN) | (1 << ADATE));
+	ADCSRA |= ((1 << ADEN) | (1 << ADATE));
 
    //set ADC clock frequency using prescaler
    //borrowing Dr. Hetherington's prescaler from Digital_Voltmeter_ADC...
