@@ -32,7 +32,10 @@ void tenSecTimerCountdownDisplay() {
     PORTH |= (1<<PORTH6); //display
     
     delayMs(1000);
-
     }
+      //turn off display 
+    PORTH &= ~(1<<PORTH6); //latch low to receive data
+    shiftOut(8, 10, LSBFIRST, 0); 
+    PORTH |= (1<<PORTH6); //display, latch high
 
 }
