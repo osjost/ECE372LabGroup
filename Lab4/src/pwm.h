@@ -1,7 +1,7 @@
-#ifndef MOTOR_H
-#define MOTOR_H
+#ifndef PWM_H
+#define PWM_H
 
 void initPWMTimer3();
-void changeDutyCycle(unsigned char ADChigh, unsigned char ADClow);
+void changeDutyCycle(unsigned int OCRval);
 
 #endif

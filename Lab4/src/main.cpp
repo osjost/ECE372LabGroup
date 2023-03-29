@@ -15,8 +15,11 @@
 #include "switch.h"
 #include "timer.h"
 #include "lcd.h"
+#include "pwm.h"
+#include "adc.h"
+#include "motor.h"
 
-#define SHORT_DELAY 100
+#define MAX_OCR_VAL 1023
 
 /*
  * Define a set of states that can be used in the state machine using an enum.
@@ -30,71 +33,59 @@ volatile stateEnum state = wait_press; //Initialize the state to waiting for but
 unsigned int currentVal = 0;
 unsigned int currentSpeedMultiplier = 1; //1 for normal, 2 for double speed
 
+volatile float currentVoltage = 0;
+
 int main(){
   //enable interrupts
   sei();
-
-  //init used pins
-  initLED();
+  //init needed components
   initSwitchPB3();
   initTimer0();
   initTimer1();
   initLCD();
-  moveCursor(0,0);
-  writeString("Blinking rate =");
-  moveCursor(1,0);
-  writeString("Fast");
+  initPWMTimer3();
+  initializeADC();
 
-  //init and draw the custom characters
-  addCustomCharacters();
-  moveCursor(1,5);
-  writeCharacter(0);
-  moveCursor(1,6);
-  writeCharacter(1);
-  moveCursor(1,7);
-  writeCharacter(2);
-  
-  /*
-  * Implement a state machine in the while loop which achieves the assignment
-  * requirements.
-  */
  while (1) {
-  switch(state) {
-    case wait_press:
-      break;
-    case debounce_press:
-      delayUs(1); //Adds delay to account for debounce period
-      state = wait_release;
-      break;
-    case wait_release: 
-     break;
-    case debounce_release: //Add delay to account for debounce period
-      delayUs(1);
 
-      if (currentSpeedMultiplier == 1) { //Actual control logic for LED speed
-        currentSpeedMultiplier = 2;
-          moveCursor(1,0);
-          writeString("Slow");
-          moveCursor(1,7);
-      } 
-      else{
-        currentSpeedMultiplier = 1;
-          moveCursor(1,0);
-          writeString("Fast");
-      }
-      state = wait_press;
-      break;
+
+  //outer state machine for button logic
+
+  //Get current ADC voltage
+  currentVoltage = (((ADCH << 8) | ADCL) / MAX_OCR_VAL) * 5.0;
+  //HANDLE MOTOR CONTROL LOGIC
+  if (currentVoltage < 2.5) {
+    //Set desired motor speed
+    changeDutyCycle((currentVoltage / 2.5) * MAX_OCR_VAL);
+    //Set correct motor direction. IDK if forward corresponds to CW or CCW, we can flip later if wrong
+    motorDirection(1);
   }
-  //Logic for incrementing and toggling LEDS
-  if (currentVal <= 15) {
-    currentVal++;
+  else if (currentVoltage == 2.5) {
+    //Turn motor off
+    changeDutyCycle(0);
   }
   else {
-    currentVal = 0;
+    //Set desired motor speed
+    changeDutyCycle(((currentVoltage - 2.5) / 2.5) * MAX_OCR_VAL);
+    //Set correct motor direction. IDK if backward corresponds to CW or CCW, we can flip later if wrong
+    motorDirection(2);
   }
-  turnOnLEDWithChar((char)currentVal);
-  delayMs(SHORT_DELAY * currentSpeedMultiplier);
- }
+
+//   switch(state) {
+//     case wait_press:
+//       break;
+//     case debounce_press:
+//       delayUs(1); //Adds delay to account for debounce period
+//       state = wait_release;
+//       break;
+//     case wait_release: 
+//      break;
+//     case debounce_release: //Add delay to account for debounce period
+//       delayUs(1);
+//       state = wait_press;
+//       break;
+//   }
+//  }
 }
 
 /* Implement an Pin Change Interrupt which handles the switch being
@@ -103,11 +94,11 @@ int main(){
 * the original rate, it goes back to the original rate.
 */
 // register that corresponds to port b, which is the port our button is on
-ISR(PCINT0_vect){ //On interrupt, advance state machine
-  if (state == wait_press){
-    state = debounce_press;
-  }
-  else if (state == wait_release) {
-    state = debounce_release;
-  }
+// ISR(PCINT0_vect){ //On interrupt, advance state machine
+//   if (state == wait_press){
+//     state = debounce_press;
+//   }
+//   else if (state == wait_release) {
+//     state = debounce_release;
+//   }
 }
