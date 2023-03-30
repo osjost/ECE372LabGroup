@@ -6,7 +6,7 @@
 // Description:  Set the ADC bits to initiate ADC sampling on free-running mode
 //----------------------------------------------------------------------//
 
-#include "ADC.h"
+#include "adc.h"
 #include <avr/io.h>
 
 void initializeADC(){
