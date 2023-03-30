@@ -33,10 +33,13 @@ volatile stateEnum state = wait_press; //Initialize the state to waiting for but
 
 
 int main() {
+  sei();
   initializeADC();
   initPWMTimer3();
   initTimer0();
   initTimer1();
+  initMotorPins();
+  initSwitchPD0();
 
   Serial.begin(9600);
   unsigned int result = 0;
@@ -70,21 +73,27 @@ int main() {
       break;
     case debounce_press:
       delayUs(1); //Adds delay to account for debounce period
+      Serial.println("debounce_press");
       state = wait_release;
       break;
     case wait_release: 
+      Serial.println("wait_release");
      break;
     case debounce_release: //Add delay to account for debounce period
+      Serial.println("debounce_release");
       delayUs(1);
-      tenSecTimerCountdownDisplay();
+      disableINT0Interrupt();
       state = wait_press;
+      motorDirection(0);
+      tenSecTimerCountdownDisplay();
+      enableINT0Interrupt();
       break;
   }
   }
 }
 
   // register that corresponds to port b, which is the port our button is on
-ISR(PCINT0_vect){ //On interrupt, advance state machine
+ISR(INT0_vect){ //On interrupt, advance state machine
   if (state == wait_press){
     state = debounce_press;
   }
@@ -92,6 +101,7 @@ ISR(PCINT0_vect){ //On interrupt, advance state machine
     state = debounce_release;
   }
 }
+
 
 
 
