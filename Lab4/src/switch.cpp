@@ -6,20 +6,32 @@
 #include <avr/io.h>
 
 /*
- * Initializes pull-up resistor on PB3 and sets it into input mode
+ * Initializes pull-up resistor on PD0 and sets it into input mode
  */
-void initSwitchPB3(){
+void initSwitchPD0(){
     // using the development board header pin 50
 
     // set direction for input
-    DDRB &= ~(1 << PORTB3);
+    DDRD &= ~(1 << PORTD0);
 
     // enable the pullup resistor for stable input
-    PORTB |= (1 << PORTB3);
+    PORTD |= (1 << PORTD0);
 
-    // enable the interrupt on the switch. From lecture 11 ISR-2
-    // enable PCINT 0 - 7
-    PCICR |= (1 << PCIE0); 
-    // enable PCINT3 since we're using switch 3
-    PCMSK0 |= (1 << PCINT3); 
+
+    //enable interrupts for portd0 // int0
+    enableINT0Interrupt();
+
+    //enable int0 for any logical change triggering interrupt
+    EICRA &= ~(1<<ISC01);
+    EICRA |=  (1<<ISC00);
+    
+    
+}
+void enableINT0Interrupt() {
+      //enable interrupts for portd0 // int0
+    EIMSK |=  (1<<INT0);
+}
+void disableINT0Interrupt(){
+  //disable interrupts for portd0 // int0
+    EIMSK &=  ~(1<<INT0);
 }
