@@ -46,6 +46,7 @@ int main() {
   double voltage = 0;
   int cycleVal = 0;
   while(1){
+    turnOffDisplay();
 
   switch(state) {
     case wait_press:
@@ -82,10 +83,10 @@ int main() {
     case debounce_release: //Add delay to account for debounce period
       Serial.println("debounce_release");
       delayUs(1);
-      disableINT0Interrupt();
+     disableINT0Interrupt();
       state = wait_press;
       motorDirection(0);
-      tenSecTimerCountdownDisplay();
+     tenSecTimerCountdownDisplay();
       enableINT0Interrupt();
       break;
   }
@@ -94,14 +95,15 @@ int main() {
 
   // register that corresponds to port b, which is the port our button is on
 ISR(INT0_vect){ //On interrupt, advance state machine
+  
   if (state == wait_press){
     state = debounce_press;
   }
   else if (state == wait_release) {
     state = debounce_release;
   }
+  else if( state == debounce_press || debounce_release) {
+    return;
+  }
 }
-
-
-
 
