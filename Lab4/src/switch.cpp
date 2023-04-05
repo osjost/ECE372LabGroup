@@ -2,23 +2,36 @@
 // switch.
 //----------------------------------------------------------------------//
 
-#include <avr/io.h>
 #include "switch.h"
+#include <avr/io.h>
+
+/*
+ * Initializes pull-up resistor on PD0 and sets it into input mode
+ */
+void initSwitchPD0(){
+    // using the development board header pin 
+
+    // set direction for input
+    DDRD &= ~(1 << PORTD0);
+
+    // enable the pullup resistor for stable input
+    PORTD |= (1 << PORTD0);
 
 
-// initialize switch to use external interrupt.  We'll use INT0 that corresponds to header pin 21 on dev board
+    //enable interrupts for portd0 // int0
+    enableINT0Interrupt();
 
-void initswitch() {
-
-  //set data direction as input
-  DDRD &= ~(1<<DDD0); 
-  //enable pullup resistor
-  PORTD |= (1 << PORTD0);  
-  
-  //enable interrupts for INT0 
-  EICRA &=  ~( 1 << ISC01);
-  EICRA |=  ( 1 << ISC00);
-
-  //enable external interrupt mask reg for INT0
-  EIMSK |= ( 1 << INT0);
+    //enable int0 for any logical change triggering interrupt
+    EICRA &= ~(1<<ISC01);
+    EICRA |=  (1<<ISC00);
+    
+    
+}
+void enableINT0Interrupt() {
+      //enable interrupts for portd0 // int0
+    EIMSK |=  (1<<INT0);
+}
+void disableINT0Interrupt(){
+  //disable interrupts for portd0 // int0
+    EIMSK &=  ~(1<<INT0);
 }
