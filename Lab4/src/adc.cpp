@@ -9,6 +9,8 @@
 #include "adc.h"
 #include <avr/io.h>
 
+//test
+
 void initializeADC(){
    //set voltage reference to 5V
 	ADMUX |= (1 << REFS0);
