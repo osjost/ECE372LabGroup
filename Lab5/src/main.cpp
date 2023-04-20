@@ -19,6 +19,8 @@
 #include "adc.h"
 #include "motor.h"
 #include "shiftRegister.h"
+#include "spi.h"
+#include "buzzer.h"
 
 #define MAX_OCR_VAL 1023
 
@@ -29,81 +31,24 @@
 enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
 volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
 
-
-
+volatile bool chirpOn = true; //0 f
 
 int main() {
-  sei();
-  initializeADC();
-  initPWMTimer3();
-  initTimer0();
-  initTimer1();
-  initMotorPins();
-  initSwitchPD0();
-
   Serial.begin(9600);
-  unsigned int result = 0;
-  double voltage = 0;
-  int cycleVal = 0;
-  while(1){
-    turnOffDisplay();
+  sei();
+  initTimer0();
+  SPI_MASTER_Init();
+  display_init();
+  initPWMTimer3();
+  initSwitchPB3();
 
-  switch(state) {
-    case wait_press:
-        result = ADCL;
-        result = (((unsigned int) ADCH) << 8) + result;
-        voltage = result * (5/1024.0);
-        Serial.println(voltage,2);
-
-        if (voltage <= 2.5) {
-          //Set desired motor speed
-          cycleVal = (1 - (voltage / 2.5)) * MAX_OCR_VAL;
-          Serial.println(cycleVal);
-          changeDutyCycle(cycleVal);
-          //Set correct motor direction. IDK if forward corresponds to CW or CCW, we can flip later if wrong
-          motorDirection(1);
-        }
-        else {
-          //Set desired motor speed
-          cycleVal = ((voltage - 2.5) / 2.5) * MAX_OCR_VAL;
-          Serial.println(cycleVal);
-          changeDutyCycle(cycleVal);
-          //Set correct motor direction. IDK if backward corresponds to CW or CCW, we can flip later if wrong
-          motorDirection(2);
-        }
-      break;
-    case debounce_press:
-      delayUs(1); //Adds delay to account for debounce period
-      Serial.println("debounce_press");
-      state = wait_release;
-      break;
-    case wait_release: 
-      Serial.println("wait_release");
-     break;
-    case debounce_release: //Add delay to account for debounce period
-      Serial.println("debounce_release");
-      delayUs(1);
-     disableINT0Interrupt();
-      state = wait_press;
-      motorDirection(0);
-     tenSecTimerCountdownDisplay();
-      enableINT0Interrupt();
-      break;
-  }
+  while(true) {
+    while(chirpOn) {
+      chirp();
+    }
   }
 }
 
-  // register that corresponds to port b, which is the port our button is on
-ISR(INT0_vect){ //On interrupt, advance state machine
-  
-  if (state == wait_press){
-    state = debounce_press;
-  }
-  else if (state == wait_release) {
-    state = debounce_release;
-  }
-  else if( state == debounce_press || debounce_release) {
-    return;
-  }
+ISR(PCINT0_vect){ //On interrupt, advance state machine
+  chirpOn = false;
 }
-

@@ -8,3 +8,7 @@ void chirp() {
     delayMs(500);
     changeDutyCycle(0);
 }
+
+void stop_chirp() {
+    changeDutyCycle(0);
+}
