@@ -117,3 +117,64 @@ ISR(PCINT0_vect){ //On interrupt, advance state machine
     state = debounce_release;
   }
 }
+
+
+
+/* nabor main stuff
+initI2C();
+  initAccelerometer();
+  Serial.begin(9600); // using serial port to print values from I2C bus
+
+  Serial.println("helo");
+
+  
+
+  while(1){
+    
+    delayMs(5);
+    StartI2C_Trans(MPU_WHO_AM_I); //establish accel slave i2c address
+     
+
+    Read_from(MPU_WHO_AM_I, MPU_XOUT_L);
+    signed int x = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_XOUT_H);
+    x = (Read_data() << 8 | x);
+
+
+
+    Read_from(MPU_WHO_AM_I, MPU_YOUT_L);
+    signed int y = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_YOUT_H);
+    y = (Read_data() << 8 | y);
+
+
+
+    Read_from(MPU_WHO_AM_I, MPU_ZOUT_L);
+    signed int z = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_ZOUT_H);
+    z = (Read_data() << 8 | z);
+
+   // Serial.println("ACCELEROMETER   x: " + String(x)+ " y: " + String(y) + " z: " + String(z));
+
+    
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_XOUT_L);
+    signed int a = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_XOUT_H);
+    a = (Read_data() << 8 | a);
+
+
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_YOUT_L);
+    signed int b = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_YOUT_H);
+    b = (Read_data() << 8 | b);
+
+
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_ZOUT_L);
+    signed int c = Read_data();
+    Read_from(MPU_WHO_AM_I, MPU_GYRO_ZOUT_H);
+    c = (Read_data() << 8 | c);
+
+    Serial.println("GYRO   x: " + String(a)+ " y: " + String(b) + " z: " + String(c));
+
+  }
+*/
