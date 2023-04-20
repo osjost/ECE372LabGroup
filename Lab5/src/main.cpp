@@ -30,6 +30,30 @@
 #define Y_GYRO_THRESHOLD_VAL //to do
 #define Z_GYRO_THRESHOLD_VAL //to do
 
+//accelerometer data
+#define MPU_XOUT_H 0x3B
+#define MPU_XOUT_L 0x3C
+#define MPU_YOUT_H 0x3D
+#define MPU_YOUT_L 0x3E
+#define MPU_ZOUT_H 0x3F
+#define MPU_ZOUT_L 0x40
+#define MPU_WHO_AM_I 0x68        //I2C addy
+#define MPU_PWR_MANAGEMENT_1_REG 0x6B  
+#define MPU_PWR_CONFIG  0x09 //sets internal accel clock to X-gyro for improved stability (datasheet recommended) 
+                             //disables temp sensor (not needed for this lab)
+                             //wakes up device
+#define MPU_PWR_RESET 0x70  //resets all registers in accel to defaults
+#define MPU_PWR_MANAGEMENT_2 0x6C
+
+
+//gyro data
+#define MPU_GYRO_XOUT_H 0x43
+#define MPU_GYRO_XOUT_L 0x44
+#define MPU_GYRO_YOUT_H 0x45
+#define MPU_GYRO_YOUT_L 0x46
+#define MPU_GYRO_ZOUT_H 0x47
+#define MPU_GYRO_ZOUT_L 0x48
+
 
 /*
  * Define a set of states that can be used in the state machine using an enum.
