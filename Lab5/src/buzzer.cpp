@@ -4,10 +4,7 @@
 #include "timer.h"
 
 void chirp() {
-    changeDutyCycle(1000);
-    delayMs(200);
-    changeDutyCycle(0);
-    delayMs(200);
+    changeDutyCycle(1023);
 }
 
 void stop_chirp() {

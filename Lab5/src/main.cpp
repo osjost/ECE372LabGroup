@@ -69,7 +69,7 @@ int main() {
     Serial.println("X: " + String(x) + " Y: " + String(y) + " Z:" + String(z));
 
     //Check threshold conditions
-    if (x > 28) { //add more thresholds later once we expierment a bit, just || stuff
+    if (x > 31) { //add more thresholds later once we expierment a bit, just || stuff
       chirpOn = true;
       accelerometerState = above_threshold;
     }
@@ -79,7 +79,7 @@ int main() {
     //State machines for switch and accelerometer
     switch(state) {
       case wait_press:
-        while(chirpOn) {
+        if(chirpOn) {
           chirp(); //hangs here forever, is a chirp on then off?
         }
         break;
@@ -92,6 +92,7 @@ int main() {
       case debounce_release: //Add delay to account for debounce period
         delayMs(1);
         state = wait_press;
+        stop_chirp();
         Serial.println("here");
         break;
     }

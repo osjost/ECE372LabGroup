@@ -7,9 +7,9 @@
 #include <avr/io.h>
 
 #define DDR_SPI DDRB // Data Direction Register on ATMEGA2560 for SPI is DDRB
-#define DD_SS DDB0  // SS Chip Select data direction bit B0 of ATMEGA2560 is DDB0
-#define DD_SCK DDB1  // Clock pin connection data direction bit B1 on ATMEGA2560 is DDB1
-#define DD_MOSI DDB2 // MOSI pin datadirection on ATMEGA2560 is DDB2
+#define DD_SS DDB0  // 53 SS Chip Select data direction bit B0 of ATMEGA2560 is DDB0
+#define DD_SCK DDB1  // 52 Clock pin connection data direction bit B1 on ATMEGA2560 is DDB1
+#define DD_MOSI DDB2 // 51 MOSI pin datadirection on ATMEGA2560 is DDB2
 #define SPI_PORT PORTB // PortB for SPI on ATMEGA2560 is PORTB
 #define SPI_SS_BIT PORTB0 // Port B register Bit B0 of Chip Select on ATMEGA2560 is PORTB0
 
