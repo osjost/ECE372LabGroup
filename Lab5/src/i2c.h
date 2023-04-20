@@ -3,11 +3,11 @@
 
 void initI2C();
 
-voidStartI2C_Trans(unsigned char SLA);
+void StartI2C_Trans(unsigned char SLA);
 
 void StopI2C_Trans();
 
-Read_from(unsigned char SLA, unsigned char MEMADDRESS);
+void Read_from(unsigned char SLA, unsigned char MEMADDRESS);
 
 unsigned char Read_data();
 
