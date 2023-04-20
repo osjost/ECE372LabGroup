@@ -31,12 +31,12 @@
 enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
 volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
 
-volatile bool chirpOn = true; //0 f
+volatile bool chirpOn = true;
 
 int main() {
   Serial.begin(9600);
   sei();
-  initTimer0();
+  initTimer1();
   SPI_MASTER_Init();
   display_init();
   initPWMTimer3();

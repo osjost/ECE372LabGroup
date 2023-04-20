@@ -5,8 +5,9 @@
 
 void chirp() {
     changeDutyCycle(1000);
-    delayMs(500);
+    delayMs(200);
     changeDutyCycle(0);
+    delayMs(200);
 }
 
 void stop_chirp() {
