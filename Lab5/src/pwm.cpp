@@ -1,16 +1,21 @@
-#include <avr/io.h>
-#include <util/delay.h>
-#include "led.h"
-#include <Arduino.h>
 
-void changeDutyCycle(unsigned int OCRval) { //Pass in the desired OCR value. 1023 for max output, 0 for no output.
-    OCR3A = OCRval; // Calculate OCR3A based on PWM period. Hardcoded for now, later change to use ADC registers
+#include "PWM.h"
+#include "timer.h"
+
+void initPWMTimer3()
+{
+    //set header pin 5 to output
+    DDRE |= (1 << DDE3);
+    TCCR3A |= (1 << COM3A1) | (1 << WGM31) | (1 << WGM30);
+    TCCR3A &= ~(1 << COM3A0);
+    TCCR3B |= (1 << WGM32);
+    TCCR3B &= ~(1 << WGM33);
+    TCCR3B |= (1 << CS31);
+    TCCR3B &= ~((1 << CS32) | (1 << CS30));
+    OCR3A = 0;
 }
 
-void initPWMTimer3() {
-    //Timer 3A, on pin 5 on the board
-    DDRE |= (1 << DDE3);
-    TCCR3A |= (1 << COM3A1)|(1 << WGM31)|(1 << WGM30);
-    TCCR3B |= (1 << WGM32)|(1 << CS30);
-    changeDutyCycle(0); // default PWM to off
+void setVolume(int result)
+{
+    OCR3A = result;
 }

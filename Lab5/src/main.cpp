@@ -1,7 +1,7 @@
 // Author: Oliver Sjostrom
 // Net ID: oliversjost
-// Date: 3/16/2023
-// Assignment:     Lab 3
+// Date: 4/27/2023
+// Assignment:     Lab 5
 //
 // Description: This file contains a programmatic overall description of the
 // program. It should never contain assignments to special function registers
@@ -20,7 +20,6 @@
 #include "motor.h"
 #include "shiftRegister.h"
 #include "spi.h"
-#include "buzzer.h"
 #include "i2c.h"
 #include "accelerometer.h"
 
@@ -29,6 +28,7 @@
 
 #define X_THRESHOLD_VAL //to do
 #define Y_THRESHOLD_VAL //to do
+
 #define Z_THRESHOLD_VAL //to do
 #define Y_GYRO_THRESHOLD_VAL //to do
 #define Z_GYRO_THRESHOLD_VAL //to do
@@ -70,12 +70,14 @@ accelerometerEnum accelerometerState = below_threshold;
 
 volatile bool chirpOn = false;
 
-int x = 0;
-int y = 0;
-int z = 0;
-int yGyro = 0;
-int zGyro = 0;
-int xGyro = 0;
+signed int x = 0;
+signed int y = 0;
+signed int z = 0;
+signed int yGyro = 0;
+signed int zGyro = 0;
+signed int xGyro = 0;
+
+bool reEnable = true;
 
 int main() {
   //Initilizations. Remember to add the missing ones later!
@@ -89,20 +91,22 @@ int main() {
   initI2C();
   initAccelerometer();
 
+  Serial.println("Start");
+
   while(true) {
     StartI2C_Trans(MPU_WHO_AM_I); //establish accel slave i2c address
     Read_from(MPU_WHO_AM_I, MPU_XOUT_L);
-    signed int x = Read_data();
+    x = Read_data();
     Read_from(MPU_WHO_AM_I, MPU_XOUT_H);
     x = (Read_data() << 8 | x);
 
     Read_from(MPU_WHO_AM_I, MPU_YOUT_L);
-    signed int y = Read_data();
+    y = Read_data();
     Read_from(MPU_WHO_AM_I, MPU_YOUT_H);
     y = (Read_data() << 8 | y);
 
     Read_from(MPU_WHO_AM_I, MPU_ZOUT_L);
-    signed int z = Read_data();
+    z = Read_data();
     Read_from(MPU_WHO_AM_I, MPU_ZOUT_H);
     z = (Read_data() << 8 | z);
 
@@ -125,18 +129,19 @@ int main() {
     Serial.println("X: " + String(x) + " Y: " + String(y) + " Z:" + String(z));
 
     //Check threshold conditions
-    if (x > 31) { //add more thresholds later once we expierment a bit, just || stuff
-      chirpOn = true;
+    if (!(z > 5000)) { //add more thresholds later once we expierment a bit, just || stuff
       accelerometerState = above_threshold;
     }
-    else {
+    else{
+      reEnable = true;
       accelerometerState = below_threshold;
     }
     //State machines for switch and accelerometer
     switch(state) {
       case wait_press:
         if(chirpOn) {
-          chirp(); //hangs here forever, is a chirp on then off?
+          setVolume(40);
+          delayMs(40);
         }
         break;
       case debounce_press:
@@ -147,18 +152,22 @@ int main() {
       break;
       case debounce_release: //Add delay to account for debounce period
         delayMs(1);
-        state = wait_press;
-        stop_chirp();
-        Serial.println("here");
+        setVolume(0);
+        delayMs(40);
         state = wait_press;
         break;
     }
 
     switch (accelerometerState) {
       case above_threshold:
+        if (reEnable) {
+          chirpOn = true;
+        }
         write_frowney();
+        reEnable = false;
         break;
       case below_threshold:
+        reEnable = true;
         write_smiley();
         break;
     }
