@@ -1,3 +1,7 @@
+// Author: Nabor Rios
+// Net ID: riosnabor
+// 4/27/2023
+
 #include "accelerometer.h"
 #include "i2c.h"
 #include <avr/io.h>

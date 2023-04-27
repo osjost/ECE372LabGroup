@@ -1,6 +1,11 @@
 
 //taken from lecture
 
+// Author: Oliver Sjostrom
+// Net ID: oliversjost
+// Date: 4/27/2023
+// Assignment:     Lab 5
+
 #include <Arduino.h>
 #include "SPI.h"
 #include <avr/interrupt.h>

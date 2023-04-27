@@ -1,5 +1,5 @@
-// Author: Oliver Sjostrom
-// Net ID: oliversjost
+// Author: Oliver sjostrom, Tom Gentrup, Nabor Rios
+// Net ID: oliversjost, riosnabor, tgentrup
 // Date: 4/27/2023
 // Assignment:     Lab 5
 //
@@ -11,13 +11,10 @@
 //----------------------------------------------------------------------//
 #include <Arduino.h>
 #include <avr/io.h>
-#include "led.h"
 #include "switch.h"
 #include "timer.h"
-#include "lcd.h"
 #include "pwm.h"
 #include "adc.h"
-#include "motor.h"
 #include "shiftRegister.h"
 #include "spi.h"
 #include "i2c.h"
@@ -94,6 +91,7 @@ int main() {
   Serial.println("Start");
 
   while(true) {
+    //NABOR
     StartI2C_Trans(MPU_WHO_AM_I); //establish accel slave i2c address
     Read_from(MPU_WHO_AM_I, MPU_XOUT_L);
     x = Read_data();
@@ -124,6 +122,7 @@ int main() {
     signed int c = Read_data();
     Read_from(MPU_WHO_AM_I, MPU_GYRO_ZOUT_H);
     zGyro = (Read_data() << 8 | c);
+    //NABOR
 
     //print accelerometer values
     Serial.println("X: " + String(x) + " Y: " + String(y) + " Z:" + String(z));
@@ -158,6 +157,7 @@ int main() {
         break;
     }
 
+    //Control for audio
     switch (accelerometerState) {
       case above_threshold:
         if (reEnable) {

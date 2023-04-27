@@ -1,7 +1,7 @@
 // Author: Oliver Sjostrom
 // Net ID: oliversjost
-// Date: 3/16/2023
-// Assignment:     Lab 3
+// Date: 4/27/2023
+// Assignment:     Lab 5
 
 #include "timer.h"
 //You many use any timer you wish for the microsecond delay and the millisecond delay

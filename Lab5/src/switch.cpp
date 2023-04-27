@@ -1,6 +1,7 @@
-// Description: This file implements the initialization of an external
-// switch.
-//----------------------------------------------------------------------//
+// Author: Oliver Sjostrom
+// Net ID: oliversjost
+// Date: 4/27/2023
+// Assignment:     Lab 5
 
 #include "switch.h"
 #include <avr/io.h>

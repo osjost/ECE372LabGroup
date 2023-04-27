@@ -1,3 +1,7 @@
+//TOM GENTRUP
+// Net ID:tgentrup
+// Date: 4/27/23
+// Assignment: Lab 5
 #include "i2c.h"
 #include <avr/io.h>
 #include "Arduino.h"

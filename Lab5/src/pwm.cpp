@@ -1,7 +1,12 @@
+// Author: Oliver Sjostrom
+// Net ID: oliversjost
+// Date: 4/27/2023
+// Assignment:     Lab 5
 
 #include "PWM.h"
 #include "timer.h"
 
+//Initialize timer for PWM
 void initPWMTimer3()
 {
     //set header pin 5 to output
@@ -15,6 +20,7 @@ void initPWMTimer3()
     OCR3A = 0;
 }
 
+//Set volume level, 0 for no sound
 void setVolume(int result)
 {
     OCR3A = result;

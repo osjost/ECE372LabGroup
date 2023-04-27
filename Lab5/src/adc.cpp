@@ -1,7 +1,7 @@
 // Author: Thomas Gentrup
 // Net ID:tgentrup
-// Date: 3/26/23
-// Assignment: Lab 4
+// Date: 4/27/23
+// Assignment: Lab 5
 //
 // Description:  Set the ADC bits to initiate ADC sampling on free-running mode
 //----------------------------------------------------------------------//
