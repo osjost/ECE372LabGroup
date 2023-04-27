@@ -15,7 +15,6 @@
 #include "timer.h"
 #include "pwm.h"
 #include "adc.h"
-#include "shiftRegister.h"
 #include "spi.h"
 #include "i2c.h"
 #include "accelerometer.h"
