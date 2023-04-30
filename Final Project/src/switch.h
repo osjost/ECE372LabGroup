@@ -5,7 +5,5 @@
 #define SWITCH_H
 
 void initSwitchPB3();
-void enableINT0Interrupt();
-void disableINT0Interrupt();
 
 #endif

@@ -36,29 +36,31 @@ int main() {
   initPWMTimer3();
   initTimer0();
   initTimer1();
-  initSwitchPD0();
-  SPI_MASTER_Init();
-  display_init();
+  initSwitchPB3();
   initLCD();
   moveCursor(0, 0); // moves the cursor to 0,0 position
-  writeString("BAC: ");
-  moveCursor(1, 0);  // moves the cursor to 1,0 position
-
+  writeString("BAC");
 
   Serial.begin(9600);
-  unsigned int result = 0;
+  Serial.println("Begin");
+  double result = 0;
 
-  while(1){
+  while(true){
+    
   switch(state) {
     case wait_press:
+    Serial.println("wait_press");
       break;
     case debounce_press:
       delayUs(1);
+      Serial.println("debounce_press");
       state = wait_release;
       break;
     case wait_release: 
+    Serial.println("wait_release");
      break;
     case debounce_release:
+    Serial.println("debounce_release");
       delayUs(1);
       //Beep to indicate start reading
       setVolume(40);
@@ -74,15 +76,22 @@ int main() {
       setVolume(0);
 
       //Take sensor reading
-      result = ADCL;
+      result = 999.9999;
       // result = ADCL;
       // result = (((unsigned int) ADCH) << 8) + result;
       // voltage = result * (5/1024.0);
+
       if (result > ALC_THRESHOLD) {
-        writeString(String(result) + " NO!");
+        String temp = String(result, 4);
+        temp+= " NO!";
+        moveCursor(1, 0);
+        writeString(temp.c_str());
       }
       else {
-        writeString(String(result) + " YES!")
+        String temp = String(result, 4);
+        temp+= " YES!";
+        moveCursor(1, 0);
+        writeString(temp.c_str());
       }
 
       state = wait_press;
@@ -92,16 +101,12 @@ int main() {
 }
 
   // register that corresponds to port b, which is the port our button is on
-ISR(INT0_vect){ //On interrupt, advance state machine
-  
+ISR(PCINT0_vect){ //On interrupt, advance state machine
   if (state == wait_press){
     state = debounce_press;
   }
   else if (state == wait_release) {
     state = debounce_release;
-  }
-  else if( state == debounce_press || debounce_release) {
-    return;
   }
 }
 

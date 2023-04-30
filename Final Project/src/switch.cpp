@@ -1,37 +1,26 @@
-// Description: This file implements the initialization of an external
-// switch.
-//----------------------------------------------------------------------//
+// Author: Oliver Sjostrom
+// Net ID: oliversjost
+// Date: 4/27/2023
+// Assignment:     Lab 5
 
 #include "switch.h"
 #include <avr/io.h>
 
 /*
- * Initializes pull-up resistor on PD0 and sets it into input mode
+ * Initializes pull-up resistor on PB3 and sets it into input mode
  */
-void initSwitchPD0(){
-    // using the development board header pin 
+void initSwitchPB3(){
+    // using the development board header pin 50
 
     // set direction for input
-    DDRD &= ~(1 << PORTD0);
+    DDRB &= ~(1 << PORTB3);
 
     // enable the pullup resistor for stable input
-    PORTD |= (1 << PORTD0);
+    PORTB |= (1 << PORTB3);
 
-
-    //enable interrupts for portd0 // int0
-    enableINT0Interrupt();
-
-    //enable int0 for any logical change triggering interrupt
-    EICRA &= ~(1<<ISC01);
-    EICRA |=  (1<<ISC00);
-    
-    
-}
-void enableINT0Interrupt() {
-      //enable interrupts for portd0 // int0
-    EIMSK |=  (1<<INT0);
-}
-void disableINT0Interrupt(){
-  //disable interrupts for portd0 // int0
-    EIMSK &=  ~(1<<INT0);
+    // enable the interrupt on the switch. From lecture 11 ISR-2
+    // enable PCINT 0 - 7
+    PCICR |= (1 << PCIE0); 
+    // enable PCINT3 since we're using switch 3
+    PCMSK0 |= (1 << PCINT3); 
 }
