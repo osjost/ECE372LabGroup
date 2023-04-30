@@ -9,6 +9,96 @@
 //
 // Requirements:
 //----------------------------------------------------------------------//
+/*
+#include <Arduino.h>
+#include <avr/io.h>
+
+#include "timer.h"
+#include "lcd.h"
+#include "pwm.h"
+#include "adc.h"
+
+#include "spi.h"
+#include "buzzer.h"
+#include "i2c.h"
+
+#include "ad1115.h"
+
+
+//adds1115 has a four different slave address
+//connect addr pin to GND for a slave addy of 1001000
+
+
+
+#define ADD1115_ADDY 0b1001000    //7bit address if ADDR pin is grounded  
+#define CONVERSION_reg  0b00000000  //points to covnersion
+#define CONFIG_reg  0b00000001    //points to config
+
+
+
+int main() {
+
+  Serial.begin(9600);
+ 
+  sei();
+
+  initTimer1();
+  initPWMTimer3();
+  initI2C();
+
+  Serial.print("init done\n");
+
+  initAD1115();     //sets up module into continous conversion mode
+
+  // DDRF &= ~(1<<PF0);
+  // PORTF |= (1<<PF0);
+
+ 
+
+//  int conversion_data_H;
+//  int conversion_data_L;
+//  int result;
+  //float analog_in;
+  
+  while (true) {
+
+
+    //Read_from(ADD1115_ADDY, CONVERSION_reg);
+
+
+    //conversion_data_H = Read_data();
+
+    Read_from_16bit(ADD1115_ADDY, CONVERSION_reg);
+
+    //conversion_data_L = Read_data();
+
+    //analog_in = analogRead(A0);
+
+    
+     //result = (conversion_data_H << 8 | conversion_data_L);
+
+    //Serial.println(result);
+
+
+
+    
+
+  }
+
+}
+
+*/
+// Author: Oliver Sjostrom
+// Net ID: oliversjost
+// Date: 3/16/2023
+// Assignment:     Lab 3
+//
+// Description: This file contains a programmatic overall description of the
+// program. It should never contain assignments to special function registers
+// for the exception key one-line code such as checking the state of the pin.
+//
+// Requirements:
+//----------------------------------------------------------------------//
 #include <Arduino.h>
 #include <avr/io.h>
 #include "led.h"
