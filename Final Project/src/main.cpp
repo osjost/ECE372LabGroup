@@ -109,9 +109,15 @@ int main() {
 #include "adc.h"
 #include "motor.h"
 #include "shiftRegister.h"
+#include "i2c.h"
+#include "ad1115.h"
 
 #define MAX_OCR_VAL 1023
 #define ALC_THRESHOLD 99
+#define ADD1115_ADDY 0b1001000    //7bit address if ADDR pin is grounded  
+#define CONVERSION_reg  0b00000000  //points to covnersion
+#define CONFIG_reg  0b00000001    //points to config
+
 
 /*
  * Define a set of states that can be used in the state machine using an enum.
@@ -119,6 +125,8 @@ int main() {
 
 enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
 volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
+
+int resultADC;
 
 int main() {
   sei();
@@ -128,6 +136,9 @@ int main() {
   initTimer1();
   initSwitchPB3();
   initLCD();
+  initI2C();
+  initAD1115();
+  
   moveCursor(0, 0); // moves the cursor to 0,0 position
   writeString("BAC");
 
@@ -139,18 +150,14 @@ int main() {
     
   switch(state) {
     case wait_press:
-    Serial.println("wait_press");
       break;
     case debounce_press:
       delayUs(1);
-      Serial.println("debounce_press");
       state = wait_release;
       break;
     case wait_release: 
-    Serial.println("wait_release");
      break;
     case debounce_release:
-    Serial.println("debounce_release");
       delayUs(1);
       //Beep to indicate start reading
       setVolume(40);
@@ -158,7 +165,7 @@ int main() {
       setVolume(0);
 
       //Delay 3 seconds for person to breathe
-      delayMs(3000);
+      delayMs(7000);
 
       //Beep to indicate reading done
       setVolume(40);
@@ -166,10 +173,10 @@ int main() {
       setVolume(0);
 
       //Take sensor reading
-      result = 999.9999;
-      // result = ADCL;
-      // result = (((unsigned int) ADCH) << 8) + result;
-      // voltage = result * (5/1024.0);
+      resultADC = Read_from_16bit(ADD1115_ADDY, CONVERSION_reg);
+      Serial.println(resultADC);
+      result = ((double) resultADC / 32768) * 5;
+      Serial.println(result);
 
       if (result > ALC_THRESHOLD) {
         String temp = String(result, 4);

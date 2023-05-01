@@ -65,7 +65,7 @@ void Read_from(unsigned char SLA, unsigned char MEMADDRESS){
 
 }
 
-void Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS){
+int Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS){
   
   StartI2C_Trans(SLA);
   //Serial.println("Start Finish");
@@ -96,14 +96,11 @@ void Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS){
   TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO); // Trigger action + stop condition
   //Serial.println("Read Finish");
 
-
-
   int result = (high << 8 | low);
-  Serial.println(result);
+  return result;
 }
 
 
-  
 unsigned char Read_data() 
 {
   return TWDR;

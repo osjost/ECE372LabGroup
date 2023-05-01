@@ -9,8 +9,7 @@ void StopI2C_Trans();
 
 void Read_from(unsigned char SLA, unsigned char MEMADDRESS);
 
-void Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS);
-
+int Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS);
 
 unsigned char Read_data();
 
