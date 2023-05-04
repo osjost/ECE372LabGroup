@@ -88,7 +88,7 @@ int Read_from_16bit(unsigned char SLA, unsigned char MEMADDRESS){
 
   int high = Read_data();
 
-  TWCR = (1<< TWINT) | (1 << TWEN);
+  TWCR = (1<< TWINT) | (1 << TWEN); //trigger action + NACK
   wait_for_completion;
 
   int low = Read_data();
